@@ -42,9 +42,17 @@ export default async function LessonPage({
         <p className="mt-3 text-[0.7rem] uppercase tracking-[0.14em] text-fog">
           Lesson {index + 1} of {lessons.length}
         </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-          {lesson.title}
-        </h1>
+        <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            {lesson.title}
+          </h1>
+          <Link
+            href={`/journey/${journey.id}/lesson/${lesson.id}/edit`}
+            className="btn btn-ghost !px-3 !py-1.5 !text-xs"
+          >
+            Edit lesson
+          </Link>
+        </div>
       </header>
 
       {lesson.key_concept && (

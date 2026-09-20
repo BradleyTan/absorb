@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProgressRing from "@/components/ProgressRing";
 import ChallengeCard from "@/components/ChallengeCard";
+import JourneyManage from "@/components/JourneyManage";
 import { getJourney, practiceByLesson } from "@/lib/queries";
 import { completedLessonIds } from "@/lib/progress";
 
@@ -260,6 +261,8 @@ export default async function JourneyPage({
           </div>
         )}
       </section>
+
+      <JourneyManage journeyId={journey.id} journeyTitle={journey.title} />
     </div>
   );
 }
