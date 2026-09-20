@@ -52,6 +52,31 @@ async function report(env: Record<string, string>) {
     return false;
   }
 
+  // Check the project is actually serving before blaming the schema: a paused
+  // or restoring project answers DNS but returns a Cloudflare 5xx, which the
+  // client reports as an empty error message.
+  const health = await fetch(`${url}/rest/v1/`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  }).catch((e: Error) => e);
+
+  if (health instanceof Error) {
+    console.error(
+      `Cannot reach ${url}\n  ${health.message}\n\n` +
+        "The project may not exist. Check it in the Supabase dashboard.",
+    );
+    process.exitCode = 1;
+    return false;
+  }
+  if (health.status >= 500) {
+    console.error(
+      `${url} answered ${health.status}.\n\n` +
+        "The project is reachable but not serving — usually a paused project\n" +
+        "still restoring. Wait for it to finish starting, then re-run.",
+    );
+    process.exitCode = 1;
+    return false;
+  }
+
   const { createClient } = await import("@supabase/supabase-js");
   const supabase = createClient(url, key);
 
@@ -63,7 +88,10 @@ async function report(env: Record<string, string>) {
       .select("*", { count: "exact", head: true });
     if (error) {
       allPresent = false;
-      console.log(`  ✗ ${table.padEnd(16)} ${error.message}`);
+      const detail =
+        [error.message, error.code, error.hint].filter(Boolean).join(" · ") ||
+        "unknown error";
+      console.log(`  ✗ ${table.padEnd(16)} ${detail}`);
     } else {
       console.log(`  ✓ ${table.padEnd(16)} ${count ?? 0} rows`);
     }
