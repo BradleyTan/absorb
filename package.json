@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db": "node scripts/db.mts",
+    "db:apply": "node scripts/db.mts --apply",
+    "check:generator": "node scripts/gen-check.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",
@@ -28,7 +31,9 @@
     "eslint": "^9",
     "eslint-config-next": "^15.0.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "pg": "^8.13.0",
+    "@types/pg": "^8.11.0"
   },
   "packageManager": "bun@1.1.30"
 }

@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { createClient } from "./supabase/server";
 import { isSupabaseConfigured } from "./supabase/config";
 import { computeStats } from "./progress";
@@ -70,8 +71,13 @@ export async function listJourneys(): Promise<JourneyCard[]> {
   });
 }
 
-/** Everything needed to render a journey and its lessons, practice and challenge. */
-export async function getJourney(journeyId: string): Promise<JourneyBundle | null> {
+/**
+ * Everything needed to render a journey and its lessons, practice and challenge.
+ * Cached per request so a page and its generateMetadata share one round trip.
+ */
+export const getJourney = cache(async function getJourney(
+  journeyId: string,
+): Promise<JourneyBundle | null> {
   if (!isSupabaseConfigured()) return null;
   const supabase = await createClient();
 
@@ -119,7 +125,7 @@ export async function getJourney(journeyId: string): Promise<JourneyBundle | nul
     progress,
     stats: computeStats(lessons, practice, progress, challenge),
   };
-}
+});
 
 /** Practice items grouped under their lesson, in lesson order. */
 export function practiceByLesson(

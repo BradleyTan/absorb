@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import LessonCompleteToggle from "@/components/LessonCompleteToggle";
@@ -7,6 +8,21 @@ import { completedLessonIds } from "@/lib/progress";
 import { toClientItems } from "@/lib/clientItems";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string; lessonId: string }>;
+}): Promise<Metadata> {
+  const { id, lessonId } = await params;
+  const bundle = await getJourney(id);
+  const lesson = bundle?.lessons.find((l) => l.id === lessonId);
+  if (!lesson) return { title: "Lesson not found — Absorb" };
+  return {
+    title: `${lesson.title} — Absorb`,
+    description: lesson.key_concept ?? undefined,
+  };
+}
 
 export default async function LessonPage({
   params,

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProgressRing from "@/components/ProgressRing";
@@ -7,6 +8,20 @@ import { getJourney, practiceByLesson } from "@/lib/queries";
 import { completedLessonIds } from "@/lib/progress";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const bundle = await getJourney(id);
+  if (!bundle) return { title: "Journey not found — Absorb" };
+  return {
+    title: `${bundle.journey.title} — Absorb`,
+    description: bundle.topic?.description ?? undefined,
+  };
+}
 
 function StageHeader({
   step,
