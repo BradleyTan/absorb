@@ -1,1 +1,263 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ink: #05060c;
+  --color-surface: #0d1019;
+  --color-surface-2: #141828;
+  --color-surface-3: #1b2033;
+  --color-line: #262c42;
+  --color-fog: #8d95b2;
+  --color-chalk: #eef1f9;
+  --color-brand: #7c5cff;
+  --color-brand-soft: #a78bfa;
+  --color-mint: #2fd4a0;
+  --color-amber: #ffb547;
+  --color-rose: #ff5c7a;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-ink);
+  color: var(--color-chalk);
+  font-family: var(--font-sans);
+}
+
+body {
+  background-image:
+    radial-gradient(60rem 40rem at 12% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
+    radial-gradient(50rem 32rem at 100% 0%, rgba(47, 212, 160, 0.09), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(124, 92, 255, 0.35);
+}
+
+/* ── scrollbars ─────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* ── motion ─────────────────────────────────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes sheen {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-rise {
+  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-fade {
+  animation: fade 0.5s ease both;
+}
+.animate-pop {
+  animation: pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.animate-shake {
+  animation: shake 0.4s ease both;
+}
+.animate-spin-slow {
+  animation: spin 0.9s linear infinite;
+}
+
+.stagger > * {
+  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.stagger > *:nth-child(8) { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── primitives ─────────────────────────────────────────────── */
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  backdrop-filter: blur(6px);
+}
+
+.card-hover {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  border-color: rgba(124, 92, 255, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px -18px rgba(124, 92, 255, 0.6);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.7rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.1rem;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #7c5cff, #5b8cff);
+  color: white;
+  box-shadow: 0 10px 30px -14px rgba(124, 92, 255, 0.9);
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-line);
+  color: var(--color-chalk);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(124, 92, 255, 0.5);
+}
+
+.btn-danger {
+  background: rgba(255, 92, 122, 0.1);
+  border-color: rgba(255, 92, 122, 0.3);
+  color: #ff8fa3;
+}
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 92, 122, 0.18);
+}
+
+.input {
+  width: 100%;
+  background: rgba(5, 6, 12, 0.6);
+  border: 1px solid var(--color-line);
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  color: var(--color-chalk);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+.input::placeholder {
+  color: #5f6a8a;
+}
+.input:focus {
+  border-color: rgba(124, 92, 255, 0.7);
+  box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.14);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 99px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-fog);
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.09) 37%,
+    rgba(255, 255, 255, 0.04) 63%
+  );
+  background-size: 400% 100%;
+  animation: sheen 1.4s ease infinite;
+  border-radius: 0.6rem;
+}
+
+.prose-lesson p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  color: #c9cfe3;
+}
+.prose-lesson p:last-child {
+  margin-bottom: 0;
+}
